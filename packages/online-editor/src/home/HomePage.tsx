@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EditorType, File as UploadFile, newFile } from "@kogito-tooling/embedded-editor";
+import { EditorType, File as UploadFile } from "@kogito-tooling/embedded-editor";
 import {
   Brand,
   Bullseye,
@@ -49,6 +49,7 @@ import { Link } from "react-router-dom";
 import { AnimatedTripleDotLabel } from "../common/AnimatedTripleDotLabel";
 import { GlobalContext } from "../common/GlobalContext";
 import { extractFileExtension, removeFileExtension } from "../common/utils";
+import { TrySampleModel } from "./TrySampleModel";
 
 interface Props {
   onFileOpened: (file: UploadFile) => void;
@@ -227,45 +228,6 @@ export function HomePage(props: Props) {
         return "";
     }
   }, [uploadFileInputState]);
-
-  const createEmptyFile = useCallback(
-    (editorType: EditorType) => {
-      props.onFileOpened(newFile(editorType));
-      history.replace(context.routes.editor.url({ type: editorType }));
-    },
-    [context, history]
-  );
-
-  const createEmptyBpmnFile = useCallback(() => {
-    createEmptyFile(EditorType.BPMN);
-  }, [createEmptyFile]);
-
-  const createEmptyDmnFile = useCallback(() => {
-    createEmptyFile(EditorType.DMN);
-  }, [createEmptyFile]);
-
-  const trySample = useCallback(
-    (editorType: EditorType) => {
-      const fileName = "sample";
-      const filePath = `samples/${fileName}.${editorType}`;
-      props.onFileOpened({
-        isReadOnly: false,
-        editorType: editorType,
-        fileName: fileName,
-        getFileContents: () => fetch(filePath).then(response => response.text())
-      });
-      history.replace(context.routes.editor.url({ type: editorType }));
-    },
-    [context, history]
-  );
-
-  const tryBpmnSample = useCallback(() => {
-    trySample(EditorType.BPMN);
-  }, [trySample]);
-
-  const tryDmnSample = useCallback(() => {
-    trySample(EditorType.DMN);
-  }, [trySample]);
 
   const validateUrl = useCallback(async () => {
     if (inputFileUrl.trim() === "") {
@@ -547,44 +509,8 @@ export function HomePage(props: Props) {
       </PageSection>
       <PageSection className="pf-u-px-2xl-on-lg">
         <Gallery gutter="lg" className="kogito--editor-landing__gallery">
-          <Card data-ouia-component-type="try-sample-model"
-                data-ouia-component-id="try-sample-model-bpmn">
-            <CardHeader>
-              <Title headingLevel="h2" size="2xl">
-                Workflow (.BPMN)
-              </Title>
-            </CardHeader>
-            <CardBody isFilled={false}>BPMN files are used to generate business processes.</CardBody>
-            <CardBody isFilled={true}>
-              <Button variant="link" isInline={true} onClick={tryBpmnSample}>
-                Try Sample
-              </Button>
-            </CardBody>
-            <CardFooter>
-              <Button variant="secondary" onClick={createEmptyBpmnFile}>
-                Create new workflow
-              </Button>
-            </CardFooter>
-          </Card>
-          <Card data-ouia-component-type="try-sample-model"
-                data-ouia-component-id="try-sample-model-dmn">
-            <CardHeader>
-              <Title headingLevel="h2" size="2xl">
-                Decision model (.DMN)
-              </Title>
-            </CardHeader>
-            <CardBody isFilled={false}>DMN files are used to generate decision models</CardBody>
-            <CardBody isFilled={true}>
-              <Button variant="link" isInline={true} onClick={tryDmnSample}>
-                Try Sample
-              </Button>
-            </CardBody>
-            <CardFooter>
-              <Button variant="secondary" onClick={createEmptyDmnFile}>
-                Create new decision model
-              </Button>
-            </CardFooter>
-          </Card>
+          <TrySampleModel editorType={EditorType.BPMN} onFileOpened={props.onFileOpened} />
+          <TrySampleModel editorType={EditorType.DMN} onFileOpened={props.onFileOpened} />
           <Card>
             <CardHeader>
               <Title headingLevel="h2" size="2xl">
