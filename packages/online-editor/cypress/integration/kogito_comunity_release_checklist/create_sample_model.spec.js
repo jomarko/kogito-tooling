@@ -8,19 +8,20 @@ context('Check sample models successfully created', () => {
   it('Try BPMN sample', () => {
     cy.trySampleModel('bpmn')
 
-    cy.getDiagramEditorBody().find('[data-title="Explore Diagram"]').click();
-    cy.getDiagramEditorBody()
-      .find('[data-field="explorerPanelBody"]')
-      .contains("Process travelers")
+    cy.getDiagramEditorBody().within(() => {
+      cy.get('[data-title="Explore Diagram"]').click();
+      cy.get('[data-field="explorerPanelBody"]')
+        .contains("Process travelers")
+    })
   })
 
   it('Try DMN sample', () => {
     cy.trySampleModel('dmn')
 
-    cy.getDiagramEditorBody().find('.fa-chevron-right').click();
-    cy.getDiagramEditorBody()
-      .find('li[data-i18n-prefix="DecisionNavigatorTreeView."]')
-      .should("have.attr", "title", "loan_pre_qualification");
-
+    cy.getDiagramEditorBody().within(($diagramEditor) => {
+      cy.get('.fa-chevron-right').click();
+      cy.get('li[data-i18n-prefix="DecisionNavigatorTreeView."]')
+        .should("have.attr", "title", "loan_pre_qualification");
+    })
   })
 })
