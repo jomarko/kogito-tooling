@@ -99,6 +99,30 @@ describe("Open from source test", () => {
     });
   });
 
+  it("should open broken DMN file from GitHub url in text editor", () => {
+    // open DMN file from github url
+    cy.get("[data-ouia-component-id='open-from-source-button']").should("be.disabled");
+    cy.get("[data-ouia-component-id='url-input']").type(SAMPLES_URL + "testModelBroken.dmn");
+    cy.get("[data-ouia-component-id='url-input']").should("have.value", SAMPLES_URL + "testModelBroken.dmn");
+    cy.get("[data-ouia-component-id='open-from-source-button']", { timeout: 15000 }).should("be.enabled");
+    cy.get("[data-ouia-component-id='open-from-source-button']").click();
+
+    // wait until loading dialog disappears
+    cy.loadEditor();
+
+    // check editor logo
+    cy.get("[class='pf-c-brand']").within(($logo) => {
+      expect($logo.attr("src")).contain("dmn");
+      expect($logo.attr("alt")).contain("dmn");
+    });
+
+    // check editor title name
+    cy.get("[aria-label='Edit file name']").should("have.value", "testModelBroken");
+
+    // DMN guided tour dialog can't be shown for invalid models
+    cy.get("[data-kgt-close='true']").should("not.exist");
+  });
+
   it("should open PMML file from GitHub url", () => {
     // open PMML file from github url
     cy.get("[data-ouia-component-id='open-from-source-button']").should("be.disabled");
