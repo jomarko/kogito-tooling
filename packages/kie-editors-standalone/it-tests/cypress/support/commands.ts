@@ -96,3 +96,10 @@ Cypress.Commands.add("viewFile", (fileName: string, editorId: string, options?: 
 
   Cypress.log({ name: "view file", message: `Viewing file ${fileName} in editor ${editorId}.` });
 });
+
+Cypress.Commands.add("downloadXml", (options?: Record<string, any>) => {
+  const opts = { ...{ log: false }, options };
+  cy.get("div#buttons button#xml", opts).click();
+
+  Cypress.log({ name: "download xml", message: "Downloading file opened file" });
+});

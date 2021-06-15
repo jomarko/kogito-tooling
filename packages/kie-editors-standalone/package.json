@@ -28,12 +28,16 @@
     "start": "webpack serve --host 0.0.0.0 --config webpack.package-resources.config.js",
     "build:it": "rimraf it-tests/dist && webpack --config ./it-tests/webpack.config.js",
     "start:it": "webpack serve --host 0.0.0.0 --config ./it-tests/webpack.config.js",
-    "cy:run": "yarn cypress run -b chrome --project it-tests",
+    "cy:run": "yarn cypress run -b chrome --project it-tests --spec 'it-tests/cypress/integration/*.spec.ts'",
+    "cy:run:external": "yarn cypress run -b chrome --project it-tests --spec 'it-tests/cypress/integration/*.spec.external.ts' --config fixturesFolder=$kie_asset_path,downloadsFolder=$kie_asset_path,trashAssetsBeforeRuns=false",
     "cy:open": "yarn cypress open --project it-tests",
+    "cy:open:external": "yarn cypress open --project it-tests --config fixturesFolder=$kie_asset_path,downloadsFolder=$kie_asset_path,trashAssetsBeforeRuns=false",
     "clean:it": "rimraf it-tests/results",
     "report:it": "jrm it-tests/results/junit.xml it-tests/results/junit-*.xml",
     "start-and-test:it": "start-server-and-test start:it http://localhost:9001 cy:run",
-    "test:it": "npm-run-all -s -c clean:it start-and-test:it report:it"
+    "start-and-test:it:external": "start-server-and-test start:it http://localhost:9001 cy:run:external",
+    "test:it": "npm-run-all -s -c clean:it start-and-test:it report:it",
+    "test:it:external": "npm-run-all -s -c clean:it start-and-test:it:external report:it"
   },
   "babel": {
     "presets": [

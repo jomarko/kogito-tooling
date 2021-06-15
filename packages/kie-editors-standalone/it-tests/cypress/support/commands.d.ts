@@ -59,5 +59,7 @@ declare namespace Cypress {
      * @param editorId string id of the editor
      */
     viewFile(fileName: string, editorId: string): Chainable<Element>;
+
+    downloadXml(options?: Record<string, any>): Chainable<Element>;
   }
 }
